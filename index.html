@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pin Generator</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="pin-generator half-width">
+                    <input class="form-control" id="pin" type="text">
+                    <button class="generate-btn" id="generate">Generate Pin</button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="input-section half-width">
+                    <input class="form-control" id="guess" type="text">
+                    <div class="numbers">
+                        <div class="calc-body">
+                            <div class="calc-button-row">
+                              <div class="button" id="button7">7</div>
+                              <div class="button" id="button8">8</div>
+                              <div class="button" id="button9">9</div>
+                            </div>
+                            <div class="calc-button-row">
+                              <div class="button" id="button4">4</div>
+                              <div class="button" id="button5">5</div>
+                              <div class="button" id="button6">6</div>
+                            </div>
+                            <div class="calc-button-row">
+                              <div class="button" id="button1">1</div>
+                              <div class="button" id="button2">2</div>
+                              <div class="button" id="button3">3</div>
+                            </div>
+                            <div class="calc-button-row">
+                                <div class="button" id="backspace"><</div>
+                                <div class="button" id="button0">0</div>
+                                <div class="button" id="clear">C</div>
+                            </div>
+                            <div>
+                                <button type="submit" class="submit-btn" id = "submit-text">Submit</button>
+                                <p class="action-left"><span id="try-count">3</span> try left</p>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="notify-section">
+            <p class="notify" id = "not-matched">❌ Pin Didn't Match, Please try again</p>
+            <p class="notify" id="matched">✅ Pin Matched... Secret door is opening for you</p>
+        </div>
+    </div>
+
+
+
+
+    <script>
+        //Clear Button Function
+        document.getElementById("clear").addEventListener("click",function(){
+            document.getElementById("guess").value = "";
+        })
+
+        //Backspace function
+        document.getElementById("backspace").addEventListener("click",function(){
+            const currentNumber = document.getElementById("guess").value;
+            document.getElementById("guess").value = currentNumber.slice(0, -1);
+            
+        })
+
+        //4 digit random number generate
+        const getPinBtn=document.getElementById("generate");
+        getPinBtn.addEventListener("click",function(){
+            const min = Math.ceil(1000); 
+            const max = Math.floor(9999);
+            const pin = Math.floor(Math.random() * (max - min + 1)) + min;
+            document.getElementById("pin").value=pin;
+            let matchedMsg = document.getElementById("matched");
+            matchedMsg.style.display = "none"
+            let notMatchedMsg = document.getElementById("not-matched");
+            notMatchedMsg.style.display = "none"
+            document.getElementById("try-count").innerText=3
+        });
+
+        //click event function for all digit 
+        //7
+        let numberPad = document.getElementById("button7");
+        numberPad.addEventListener("click",function(){
+            updateText("button7");
+
+        });
+        //9
+         numberPad = document.getElementById("button9");
+        numberPad.addEventListener("click",function(){
+            updateText("button9");
+
+        });
+        //8
+         numberPad = document.getElementById("button8");
+        numberPad.addEventListener("click",function(){
+            updateText("button8");
+
+        });
+        //6
+         numberPad = document.getElementById("button6");
+        numberPad.addEventListener("click",function(){
+            updateText("button6");
+
+        });
+        //5
+         numberPad = document.getElementById("button5");
+        numberPad.addEventListener("click",function(){
+            updateText("button5");
+
+        });
+        //4
+         numberPad = document.getElementById("button4");
+        numberPad.addEventListener("click",function(){
+            updateText("button4");
+
+        });
+        //3
+         numberPad = document.getElementById("button3");
+        numberPad.addEventListener("click",function(){
+            updateText("button3");
+
+        });
+        //2
+         numberPad = document.getElementById("button2");
+        numberPad.addEventListener("click",function(){
+            updateText("button2");
+
+        });
+        //1
+         numberPad = document.getElementById("button1");
+        numberPad.addEventListener("click",function(){
+            updateText("button1");
+
+        });
+        //0
+         numberPad = document.getElementById("button0");
+        numberPad.addEventListener("click",function(){
+            updateText("button0");
+
+        });
+        //show typed numbers in input feild
+        function updateText(id){
+            var cookieValue = document.getElementById(id).innerHTML;;
+            console.log(cookieValue);
+            
+            const guessingNumber = document.getElementById("guess").value;
+            document.getElementById("guess").value=guessingNumber + cookieValue;
+            console.log(guessingNumber);
+
+        }
+
+        //clicking submit button
+        const submitBtn  = document.getElementById("submit-text");
+        submitBtn.addEventListener("click",function(){
+            const realNumber = document.getElementById("pin").value;
+            const typedNumber = document.getElementById("guess").value;
+            const current=document.getElementById("try-count").innerText;
+            const currentNumber=parseFloat(current);
+            //matching two pins 
+            //if matched and tryleft more than 0
+            if(realNumber == typedNumber && currentNumber > 0)
+            {
+                console.log("true");
+                matchedMsg = document.getElementById("matched");
+                matchedMsg.style.display = "block"
+                notMatchedMsg = document.getElementById("not-matched");
+                notMatchedMsg.style.display = "none";
+                document.getElementById("pin").value = "";
+            }
+            //if not matched
+            else{
+                notMatchedMsg = document.getElementById("not-matched");
+                notMatchedMsg.style.display = "block";
+                matchedMsg = document.getElementById("matched");
+                matchedMsg.style.display = "none"
+                const remaining=currentNumber-1;
+                //if no try left
+                if(currentNumber == 0)
+                {
+                    alert("NO TRY LEFT");
+                    document.getElementById("pin").value = "";
+                    document.getElementById("try-count").innerText=3;
+                    notMatchedMsg = document.getElementById("not-matched");
+                    notMatchedMsg.style.display = "none";
+                    matchedMsg = document.getElementById("matched");
+                    matchedMsg.style.display = "none"
+                }
+                //if try left
+                else{
+                    document.getElementById("try-count").innerText=remaining;
+                }
+            }
+            document.getElementById("guess").value = "";
+            
+        })
+    </script>
+</body>
+</html>
